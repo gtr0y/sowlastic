@@ -1,0 +1,20 @@
+[elastic_hosts]
+  sowel-master1
+  sowel-master2
+  sowel-master3
+  sowel-coord1
+  sowel-coord2
+  sowel-data1
+  sowel-data2
+  sowel-data3
+[elastic_masters]
+  sowel-master1
+  sowel-master2
+  sowel-master3
+[elastic_coordinators]
+  sowel-coord1
+  sowel-coord2
+[elastic_data]
+  sowel-data1
+  sowel-data2
+  sowel-data3

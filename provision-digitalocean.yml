@@ -1,0 +1,37 @@
+---
+- name: Print Debug
+  debug: msg="Doing {{ do_hostname }}"
+- name: "DO the drop"
+  community.digitalocean.digital_ocean_droplet:
+    unique_name: yes
+    state: present
+    name: "{{ do_hostname }}"
+    oauth_token: "{{ digio_ssh_key }}"
+    size: s-1vcpu-1gb
+    region: fra1
+ #   ssh_keys: "[{{ hostvars['localhost']['pubkey_id'] }}]"
+    ssh_keys: "[{{ pubkey_id }}]"
+    image: ubuntu-20-04-x64
+    wait_timeout: 500
+  register: created_droplet
+# - name: DO set some tags
+  # community.digitalocean.digital_ocean_tag:
+    # name: "{{ clustername }}"
+    # resource_id: "{{ created_droplet.data.droplet.id }}"
+    # state: present
+  # register: tag_response
+- name: Inventorize hosts
+  add_host:
+    name: "{{ created_droplet.data.ip_address }}"
+    groups: "do"
+- name: DO output
+  vars:
+    out_pattern: >-
+          "name: {{ created_droplet.data.droplet.name }} [{{ created_droplet.data.droplet.size.slug }}@{{ created_droplet.data.droplet.region.slug }}]
+          slug: {{ created_droplet.data.droplet.image.slug }}
+          memory: {{ created_droplet.data.droplet.memory }}
+          disk: {{ created_droplet.data.droplet.disk }}
+          ext: {{ created_droplet.data.ip_address }} int: ({{ created_droplet.data.private_ipv4_address }})
+          "
+  debug: msg="{{ out_pattern }}"
+...
