@@ -4,9 +4,17 @@
   gather_facts: true
   vars:
     elastic_hosts: "{{ q('inventory_hostnames','elastic_hosts') }}"
-    digio_ssh_user: "{{ ansible_user }}@{{ ansible_host }}"
+    ans_user: "{{ ansible_user }}"
+    digio_ssh_user: "{{ ans_user }}@{{ fqdn }}"
   tasks:
     - debug: var=elastic_hosts
+    
+    - name: "Get local FQDN"
+      ansible.builtin.command:
+        command: hostname --fqdn
+      register: fqdn
+      ignore_errors: false
+    
     - name: "Add public ssh key to digitalocean account"
       digital_ocean_sshkey:
         name: "{{ digio_ssh_user }}"
@@ -14,17 +22,22 @@
         ssh_pub_key: "{{lookup('file', '~/.ssh/id_rsa.pub') }}"
         state: present
       register: sshkey_result
+      
     - name: Check ssh user
       debug: var=digio_ssh_user
+      
     - name: Check add result
       debug: var=sshkey_result
+      
     - name: Fetch SSH keys from Digital Ocean
       no_log: true
       community.digitalocean.digital_ocean_sshkey_info:
         oauth_token: "{{ digio_api_key }}"
       register: ssh_keys
+      
     - name: Check ssh_keys
       debug: var=ssh_keys
+      
     - name: Search for configured SSH key
       no_log: false
       set_fact:
@@ -33,8 +46,10 @@
       loop: "{{ ssh_keys.data | community.general.json_query(ssh_pubkey) }}"
       vars:
         ssh_pubkey: "[?name=='{{ digio_ssh_user }}']"
+        
     - name: Check pubkey
       debug: var=pubkey_id
+      
     - name: See if we've found the key
       debug: msg="{{ pubkey_id }} ({{ pubkey_name }})"
  #     when: pubkey_id == "someid"
