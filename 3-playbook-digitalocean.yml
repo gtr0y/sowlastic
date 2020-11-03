@@ -1,0 +1,40 @@
+---
+- name: Provision Digital Ocean Droplets
+  hosts: localhost
+  gather_facts: true
+  vars:
+ #   elastic_hosts: "{{ lookup('inventory_hostnames','elastic_hosts') }}"
+    elastic_hosts: "{{ q('inventory_hostnames','elastic_hosts') }}"
+  tasks:
+    - debug: var=elastic_hosts
+    - name: Fetch SSH keys from Digital Ocean
+      no_log: true
+      community.digitalocean.digital_ocean_sshkey_info:
+        oauth_token: "{{ digio_ssh_key }}"
+      register: ssh_keys
+    - name: Check stdout
+      debug: msg="{{ ssh_keys.stdout }}"
+    - name: Search for configured SSH key
+      no_log: true
+      set_fact:
+        pubkey_id: "{{ item.id }}"
+        pubkey_name: "{{ item.name }}"
+      loop: "{{ ssh_keys.data | community.general.json_query(ssh_pubkey) }}"
+      vars:
+        ssh_pubkey: "[?name=='{{ digio_ssh_user }}']"
+    - name: See if we've found the key
+      debug: msg="{{ pubkey_id }} ({{ pubkey_name }})"
+      when: pubkey_id == "someid"
+    - name: "Add public ssh key to digitalocean account"
+      digital_ocean_sshkey:
+        name: "{{ ansible_user }}@{{ ansible_host }}"
+        oauth_token: "{{ digital_ocean_token }}"
+        ssh_pub_key: "{{lookup('file', '~/.ssh/id_rsa.pub') }}"
+        state: present
+      register: sshkey_result
+      when: pubkey_id == "someid"
+    - include_tasks: provision-digitalocean.yml
+      loop: "{{ elastic_hosts }}"
+      loop_control:
+        loop_var: do_hostname
+...
