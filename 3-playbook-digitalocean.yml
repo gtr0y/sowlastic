@@ -12,8 +12,8 @@
       community.digitalocean.digital_ocean_sshkey_info:
         oauth_token: "{{ digio_ssh_key }}"
       register: ssh_keys
-    - name: Check stdout
-      debug: msg="{{ ssh_keys.stdout }}"
+    - name: Check ssh_keys
+      debug: var==ssh_keys
     - name: Search for configured SSH key
       no_log: true
       set_fact:
