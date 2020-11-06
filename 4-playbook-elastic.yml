@@ -66,7 +66,7 @@
       indices.recovery.max_bytes_per_sec: 100mb
 
 - name: "Deploy Elastic Coordinator Nodes"
-  hosts: coordinating
+  hosts: elastic_coordinators
   roles:
     - role: elastic.elasticsearch
   vars:

@@ -17,3 +17,4 @@ echo "slug: s-1vcpu-2gb" >> ./group_vars/all
 echo "master_heap: 1g" >> ./group_vars/all
 echo "data_heap: 1g" >> ./group_vars/all
 echo "coord_heap: 1g" >> ./group_vars/all
+touch hosts
