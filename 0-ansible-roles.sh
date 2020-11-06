@@ -1,4 +1,5 @@
-apt-get install python3-pip
+apt-get update
+apt-get install python3-pip -y
 pip3 install ansible
 ssh-keygen -q -t rsa -b 2048 -N '' -f ~/.ssh/id_rsa <<<n 2>&1 >/dev/null
 ansible-galaxy collection install community.general
