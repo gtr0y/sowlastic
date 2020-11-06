@@ -4,16 +4,26 @@
   gather_facts: true
   vars:
     elastic_hosts: "{{ q('inventory_hostnames','elastic_hosts') }}"
-    ans_user: "{{ ansible_user }}"
-    digio_ssh_user: "{{ ans_user }}@{{ fqdn }}"
+    digio_ssh_user: "{{ sshuser.stdout }}@{{ fqdn.stdout }}"
   tasks:
     - debug: var=elastic_hosts
     
     - name: "Get local FQDN"
-      ansible.builtin.command:
-        command: hostname --fqdn
+      command: "hostname --fqdn"
       register: fqdn
       ignore_errors: false
+    - name: "Get local user"
+      command: "whoami"
+      register: sshuser
+      
+    # - name: "Check FQDN"
+      # debug: msg="{{ fqdn.stdout }}"
+
+    # - name: "Stop Exec"
+      # meta: end_play
+      
+    - name: "Check SSH user"
+      debug: msg="{{ digio_ssh_user }}"
     
     - name: "Add public ssh key to digitalocean account"
       digital_ocean_sshkey:
@@ -35,8 +45,8 @@
         oauth_token: "{{ digio_api_key }}"
       register: ssh_keys
       
-    - name: Check ssh_keys
-      debug: var=ssh_keys
+    # - name: Check ssh_keys
+      # debug: var=ssh_keys
       
     - name: Search for configured SSH key
       no_log: false
