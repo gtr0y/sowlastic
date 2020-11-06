@@ -63,6 +63,7 @@
     - name: See if we've found the key
       debug: msg="{{ pubkey_id }} ({{ pubkey_name }})"
  #     when: pubkey_id == "someid"
+
     - include_tasks: provision-digitalocean.yml
       loop: "{{ elastic_hosts }}"
       loop_control:
