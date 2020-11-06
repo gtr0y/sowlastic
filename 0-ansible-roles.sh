@@ -1,3 +1,4 @@
+#git clone https://github.com/gtr0y/sowlastic.git
 apt-get update
 apt-get install python3-pip -y
 pip3 install ansible
@@ -7,7 +8,6 @@ ansible-galaxy collection install community.digitalocean
 ansible-galaxy collection install community.crypto
 ansible-galaxy install elastic.elasticsearch,7.9.2
 export ANSIBLE_HOST_KEY_CHECKING=False
-git clone https://github.com/gtr0y/sowlastic.git
 cd sowlastic
 mkdir ./group_vars
 read -p "Enter API key: " APIKEY
