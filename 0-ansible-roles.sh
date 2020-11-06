@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 #git clone https://github.com/gtr0y/sowlastic.git
 apt-get update
 apt-get install python3-pip -y
