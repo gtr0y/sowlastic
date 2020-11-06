@@ -30,7 +30,7 @@
     - role: elastic.elasticsearch
   vars:
     masterlist: "{{ lookup('inventory_hostnames', 'elastic_masters') }}"
-    es_heap_size: "768m"
+    es_heap_size: "{{ master_heap }}"
     es_config:
       cluster.name: "{{ clustername }}"
       network.host: 0
@@ -53,7 +53,7 @@
     masterlist: "{{ lookup('inventory_hostnames', 'elastic_masters') }}"
     es_data_dirs:
       - "/var/lib/elasticsearch"
-    es_heap_size: "768m"
+    es_heap_size: "{{ data_heap }}"
     es_config:
       cluster.name: "{{ clustername }}"
       network.host: 0
@@ -70,7 +70,7 @@
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_heap_size: "768m"
+    es_heap_size: "{{ coord_heap }}"
     es_config:
       cluster.name: "{{ clustername }}"
       network.host: 0

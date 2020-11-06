@@ -8,7 +8,7 @@
     state: present
     name: "{{ do_hostname }}"
     oauth_token: "{{ digio_api_key }}"
-    size: s-1vcpu-1gb
+    size: "{{ slug }}"
     region: fra1
  #   ssh_keys: "[{{ hostvars['localhost']['pubkey_id'] }}]"
     ssh_keys: "[{{ pubkey_id }}]"
