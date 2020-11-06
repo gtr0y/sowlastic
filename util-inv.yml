@@ -1,0 +1,4 @@
+[elastic_hosts]
+  util
+[elastic_masters]
+  util
