@@ -1,5 +1,6 @@
 #!/bin/bash
 #git clone https://github.com/gtr0y/sowlastic.git
+read -p "Enter API key: " APIKEY
 apt-get update
 apt-get install python3-pip -y
 apt-get install python3-jmespath -y
@@ -19,4 +20,3 @@ touch hosts
 export ANSIBLE_HOST_KEY_CHECKING=False
 echo "[defaults]\nhost_key_checking = False" >> ./ansible.cfg
 ssh-keygen -q -t rsa -b 2048 -N '' -f ~/.ssh/id_rsa <<<n 2>&1 >/dev/null
-read -p "Enter API key: " APIKEY
