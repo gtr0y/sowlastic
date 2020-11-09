@@ -1,0 +1,20 @@
+forge pw
+9Q2qKHY3bNbZgUxEqB1l
+
+generate elastic ca as pem+crt (zip output)
+/usr/share/elasticsearch/bin/elasticsearch-certutil ca --ca-dn "CN=StandOutWeb Elastic CA" --days 1095 --keysize 4096 --out /home/forge/ans/sowca.zip --pem
+generate node ca as pem+crt (zip output)
+/usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert /home/forge/ans/ca/ca.crt --ca-key /home/forge/ans/ca/ca.key --keysize 4096 --dns elasticsearch-production --ip 64.225.64.132 --name elasticsearch-production --pem --out /home/forge/ans/ca/ep.zip
+read file content
+openssl x509 -text -noout -in elasticsearch-production.crt
+
+mv elasticsearch-production.* /etc/elasticsearch/security/
+mv ca.key /etc/elasticsearch/security/
+cp ca.crt /etc/elasticsearch/security/
+mv ca.crt /usr/share/ca-certificates/
+dpkg-reconfigure ca-certificates
+chown elasticsearch:elasticsearch /etc/elasticsearch/security/elasticsearch-production.*
+chown elasticsearch:elasticsearch /etc/elasticsearch/security/ca.*
+chmod 400 /etc/elasticsearch/security/elasticsearch-production.*
+chmod 400 /etc/elasticsearch/security/ca.key
+chmod 444 /etc/elasticsearch/security/ca.crt
