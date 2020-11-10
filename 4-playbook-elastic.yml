@@ -75,6 +75,7 @@
   roles:
     - role: elastic.elasticsearch
   vars:
+    masterlist: "{{ lookup('inventory_hostnames', 'elastic_masters') }}"
     es_heap_size: "{{ coord_heap }}"
     es_config:
       cluster.name: "{{ clustername }}"
