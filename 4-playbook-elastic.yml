@@ -41,8 +41,6 @@
       network.host: 0
       cluster.initial_master_nodes: "{{ masterlist }}"
       discovery.seed_hosts: "{{ masterlist }}"
- #     cluster.initial_master_nodes: "esmaster1,esmaster2,esmaster3"
- #     discovery.seed_hosts: "esmaster1:9300,esmaster2:9300,esmaster3:9300"
       http.port: 9200
       node.data: false
       node.master: true
@@ -50,6 +48,17 @@
       node.ml: false
       cluster.remote.connect: false
       bootstrap.memory_lock: true
+#
+      xpack.security.enabled: true
+      xpack.security.transport.ssl.enabled: true
+      xpack.security.transport.ssl.verification_mode: certificate
+      xpack.security.transport.ssl.certificate: "security/{{ inventory_hostname }}.crt"
+#
+      xpack.security.http.ssl.key: "security/{{ inventory_hostname }}.key"
+      xpack.security.http.ssl.enabled: true
+      xpack.security.http.ssl.certificate: "security/{{ inventory_hostname }}.crt"
+      xpack.security.http.ssl.certificate_authorities: [ "security/ca.crt" ]
+      xpack.security.http.ssl.verification_mode: certificate
 - name: "Deploy Elastic Data Nodes"
   hosts: elastic_data
   roles:
@@ -69,6 +78,17 @@
       node.ml: false
       bootstrap.memory_lock: true
       indices.recovery.max_bytes_per_sec: 100mb
+#
+      xpack.security.enabled: true
+      xpack.security.transport.ssl.enabled: true
+      xpack.security.transport.ssl.verification_mode: certificate
+      xpack.security.transport.ssl.certificate: "security/{{ inventory_hostname }}.crt"
+#
+      xpack.security.http.ssl.key: "security/{{ inventory_hostname }}.key"
+      xpack.security.http.ssl.enabled: true
+      xpack.security.http.ssl.certificate: "security/{{ inventory_hostname }}.crt"
+      xpack.security.http.ssl.certificate_authorities: [ "security/ca.crt" ]
+      xpack.security.http.ssl.verification_mode: certificate
 
 - name: "Deploy Elastic Coordinator Nodes"
   hosts: elastic_coordinators
@@ -88,3 +108,14 @@
       node.ml: false
       cluster.remote.connect: false
       bootstrap.memory_lock: true
+#
+      xpack.security.enabled: true
+      xpack.security.transport.ssl.enabled: true
+      xpack.security.transport.ssl.verification_mode: certificate
+      xpack.security.transport.ssl.certificate: "security/{{ inventory_hostname }}.crt"
+#
+      xpack.security.http.ssl.key: "security/{{ inventory_hostname }}.key"
+      xpack.security.http.ssl.enabled: true
+      xpack.security.http.ssl.certificate: "security/{{ inventory_hostname }}.crt"
+      xpack.security.http.ssl.certificate_authorities: [ "security/ca.crt" ]
+      xpack.security.http.ssl.verification_mode: certificate

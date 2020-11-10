@@ -1,0 +1,13 @@
+- name: Print Debug
+  debug: msg="Doing {{ do_hostname }}"
+- name: "DO the drop"
+  community.digitalocean.digital_ocean_droplet:
+    unique_name: yes
+    state: absent
+    name: "{{ do_hostname }}"
+    oauth_token: "{{ digio_api_key }}"
+    size: "{{ slug }}"
+    region: fra1
+    image: ubuntu-20-04-x64
+    wait_timeout: 500
+  register: deleted_droplet
