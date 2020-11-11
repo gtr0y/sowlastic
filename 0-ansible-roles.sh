@@ -22,3 +22,4 @@ echo "[defaults]
 host_key_checking = False" >> ./ansible.cfg
 ssh-keygen -q -t rsa -b 2048 -N '' -f ~/.ssh/id_rsa <<<n 2>&1 >/dev/null
 ansible-playbook 2-playbook-digitalocean.yml -i 1-sowlastic-inventory.yml
+ansible-playbook 3-playbook-elastic.yml -i 1-sowlastic-inventory.yml
