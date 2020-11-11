@@ -1,19 +1,22 @@
 # connect to master1
 #ssh sowel-master1
 # install zip and unzip for handling cert output
-apt-get install zip
-apt-get install unzip
+apt-get install zip -y
+apt-get install unzip -y
 # generate elastic ca as pem+crt (zip output)
-/usr/share/elasticsearch/bin/elasticsearch-certutil ca --ca-dn "CN=StandOutWeb Elastic CA" --days 1095 --keysize 4096 --out ~/sowca.zip --pem
+echo "Generating CA"
+/usr/share/elasticsearch/bin/elasticsearch-certutil -s ca --ca-dn "CN=StandOutWeb Elastic CA" --days 1095 --keysize 4096 --out ~/sowca.zip --pem
 unzip sowca.zip
 mv ca sowca
 #generate node ca as pem+crt (zip output)
 #read lines from hosts file
+echo "Generating node certs"
 cat hosts | while read line || [[ -n $line ]];
 do
  # convert to array
  string=($line)
- /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert ~/sowca/ca.crt --ca-key ~/sowca/ca.key --keysize 4096 --dns ${string[1]} --ip ${string[0]} --name ${string[1]} --pem --out ~/${string[1]}.zip
+ echo "Generating for ${string[1]}"
+ /usr/share/elasticsearch/bin/elasticsearch-certutil -s cert --ca-cert ~/sowca/ca.crt --ca-key ~/sowca/ca.key --keysize 4096 --dns ${string[1]} --ip ${string[0]} --name ${string[1]} --pem --out ~/${string[1]}.zip
  zip elastic-certs.zip ${string[1]}.zip
  zip elastic-certs.zip sowca/ca.crt
  rm ${string[1]}.zip

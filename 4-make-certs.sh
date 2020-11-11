@@ -2,10 +2,11 @@ apt-get install unzip
 elhosts=$(cat hosts)
 elhosts=($elhosts)
 node=${elhosts[1]}
+echo "Sending data to $node"
 scp -o StrictHostKeyChecking=no hosts root@$node:hosts
-ssh -o StrictHostKeyChecking=no root@$node 'bash -s' < gencerts.sh
+#ssh -o StrictHostKeyChecking=no root@$node 'bash -s' < gencerts.sh
 scp -o StrictHostKeyChecking=no root@$node:elastic-certs.zip elastic-certs.zip
-ssh -o StrictHostKeyChecking=no root@$node 'rm elastic-certs.zip'
+ssh -n -o StrictHostKeyChecking=no root@$node 'rm elastic-certs.zip'
 unzip elastic-certs.zip
 
 echo "Hosts to be processed:"
@@ -26,8 +27,8 @@ do
  #ssh -n -o StrictHostKeyChecking=no root@${string[1]} "unzip ${string[1]}.zip" # decided to send unpacked
  echo "Moving files (${string[1]})"
  ssh -n -o StrictHostKeyChecking=no root@${string[1]} "mkdir /etc/elasticsearch/security/"
- ssh -n -o StrictHostKeyChecking=no root@${string[1]} "mv ${string[1]}/${string[1]}.key /etc/elasticsearch/security/"
- ssh -n -o StrictHostKeyChecking=no root@${string[1]} "mv ${string[1]}/${string[1]}.crt /etc/elasticsearch/security/"
+ ssh -n -o StrictHostKeyChecking=no root@${string[1]} "mv ${string[1]}.key /etc/elasticsearch/security/"
+ ssh -n -o StrictHostKeyChecking=no root@${string[1]} "mv ${string[1]}.crt /etc/elasticsearch/security/"
  ssh -n -o StrictHostKeyChecking=no root@${string[1]} "mv ca.crt /etc/elasticsearch/security/"
  echo "Setting permissions (${string[1]})"
  ssh -n -o StrictHostKeyChecking=no root@${string[1]} "chown elasticsearch:elasticsearch /etc/elasticsearch/security/${string[1]}.*"
