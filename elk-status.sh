@@ -1,6 +1,6 @@
 # Use curl -k to skip cert checking
 clear
-ELK='http://138.197.182.176'
+ELK='http://sowel-master1'
 ELKPW='teslaCoil99'
 
 echo "\n ----- Check Stats -----\n"

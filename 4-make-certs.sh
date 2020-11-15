@@ -4,7 +4,7 @@ elhosts=($elhosts)
 node=${elhosts[1]}
 echo "Sending data to $node"
 scp -o StrictHostKeyChecking=no hosts root@$node:hosts
-#ssh -o StrictHostKeyChecking=no root@$node 'bash -s' < gencerts.sh
+ssh -o StrictHostKeyChecking=no root@$node 'bash -s' < gencerts.sh
 scp -o StrictHostKeyChecking=no root@$node:elastic-certs.zip elastic-certs.zip
 ssh -n -o StrictHostKeyChecking=no root@$node 'rm elastic-certs.zip'
 unzip elastic-certs.zip
@@ -35,6 +35,11 @@ do
  ssh -n -o StrictHostKeyChecking=no root@${string[1]} "chmod 400 /etc/elasticsearch/security/${string[1]}.*"
  ssh -n -o StrictHostKeyChecking=no root@${string[1]} "chown elasticsearch:elasticsearch /etc/elasticsearch/security/ca.crt"
  ssh -n -o StrictHostKeyChecking=no root@${string[1]} "chmod 400 /etc/elasticsearch/security/ca.crt"
+ echo "Adding CA to trust store"
+ ssh -n -o StrictHostKeyChecking=no root@${string[1]} "mkdir /usr/share/ca-certificates/sow"
+ ssh -n -o StrictHostKeyChecking=no root@${string[1]} "cp /etc/elasticsearch/security/ca.crt /usr/share/ca-certificates/sow/"
+ ssh -n -o StrictHostKeyChecking=no root@${string[1]} "echo sow/ca.crt >> /etc/ca-certificates.conf"
+ ssh -n -o StrictHostKeyChecking=no root@${string[1]} "update-ca-certificates"
  echo "Cleaning up (${string[1]})"
  #ssh -n -o StrictHostKeyChecking=no root@${string[1]} "rm ${string[1]}.zip && rm -rf ${string[1]}" # decided to send unpacked
 done
