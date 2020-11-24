@@ -54,12 +54,13 @@
       xpack.security.transport.ssl.verification_mode: certificate
       xpack.security.transport.ssl.certificate: "security/{{ inventory_hostname }}.crt"
       xpack.security.transport.ssl.key: "security/{{ inventory_hostname }}.key"
+      xpack.security.transport.ssl.certificate_authorities: [ "security/ca.crt" ]
 #
-      xpack.security.http.ssl.key: "security/{{ inventory_hostname }}.key"
       xpack.security.http.ssl.enabled: true
-      xpack.security.http.ssl.certificate: "security/{{ inventory_hostname }}.crt"
-      xpack.security.http.ssl.certificate_authorities: [ "security/ca.crt" ]
       xpack.security.http.ssl.verification_mode: certificate
+      xpack.security.http.ssl.certificate: "security/{{ inventory_hostname }}.crt"
+      xpack.security.http.ssl.key: "security/{{ inventory_hostname }}.key"
+      xpack.security.http.ssl.certificate_authorities: [ "security/ca.crt" ]
 - name: "Deploy Elastic Data Nodes"
   hosts: elastic_data
   roles:

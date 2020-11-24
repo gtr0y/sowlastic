@@ -41,6 +41,8 @@ do
  ssh -n -o StrictHostKeyChecking=no root@${string[1]} "echo sow/ca.crt >> /etc/ca-certificates.conf"
  ssh -n -o StrictHostKeyChecking=no root@${string[1]} "update-ca-certificates"
  echo "Cleaning up (${string[1]})"
+ rm ${string[1]}.zip
+ rm -rf ${string[1]}
  #ssh -n -o StrictHostKeyChecking=no root@${string[1]} "rm ${string[1]}.zip && rm -rf ${string[1]}" # decided to send unpacked
 done
 
